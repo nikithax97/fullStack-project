@@ -1,52 +1,59 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List
+from sqlalchemy.orm import Session
+from database import SessionLocal, Task
+from models import TaskCreate, TaskUpdate, TaskOut
 
 app = FastAPI()
 
-# Allow CORS for React frontend
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can restrict this to ["http://localhost:5173"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Task Model
-class Task(BaseModel):
-    id: int
-    title: str
-    completed: bool = False
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-tasks: List[Task] = []
+@app.post("/tasks", response_model=TaskOut)
+def create_task(task: TaskCreate):
+    db = next(get_db())
+    db_task = Task(title=task.title, completed=task.completed)
+    db.add(db_task)
+    db.commit()
+    db.refresh(db_task)
+    return db_task
 
-# Create Task
-@app.post("/tasks")
-def create_task(task: Task):
-    tasks.append(task)
-    return task
-
-# Get All Tasks
-@app.get("/tasks")
+@app.get("/tasks", response_model=list[TaskOut])
 def get_tasks():
-    return tasks
+    db = next(get_db())
+    return db.query(Task).all()
 
-# Update Task
-@app.put("/tasks/{task_id}")
-def update_task(task_id: int, updated_task: Task):
-    for i, t in enumerate(tasks):
-        if t.id == task_id:
-            tasks[i] = updated_task
-            return updated_task
-    raise HTTPException(status_code=404, detail="Task not found")
+@app.put("/tasks/{task_id}", response_model=TaskOut)
+def update_task(task_id: int, task: TaskUpdate):
+    db = next(get_db())
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+    if not db_task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    db_task.title = task.title
+    db_task.completed = task.completed
+    db.commit()
+    db.refresh(db_task)
+    return db_task
 
-# Delete Task
 @app.delete("/tasks/{task_id}")
 def delete_task(task_id: int):
-    for i, t in enumerate(tasks):
-        if t.id == task_id:
-            tasks.pop(i)
-            return {"message": "Task deleted"}
-    raise HTTPException(status_code=404, detail="Task not found")
+    db = next(get_db())
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+    if not db_task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    db.delete(db_task)
+    db.commit()
+    return {"message": "Task deleted"}
