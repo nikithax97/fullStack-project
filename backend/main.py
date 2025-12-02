@@ -1,15 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+
 from database import SessionLocal, Task
-from models import TaskCreate, TaskUpdate, TaskOut
+from models import TaskCreate, TaskUpdate, TaskOut, LLMRequest, LLMResponse
+from llm_service import get_llm_response 
 
 app = FastAPI()
 
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,3 +59,21 @@ def delete_task(task_id: int):
     db.delete(db_task)
     db.commit()
     return {"message": "Task deleted"}
+
+@app.post("/llm/chat", response_model=LLMResponse)
+def chat_with_llm(payload: LLMRequest):
+    """
+    Accepts user input, calls LLM, returns AI response.
+    (Right now we won't save to DB, just respond.)
+    """
+    try:
+        reply = get_llm_response(payload.message)
+    except RuntimeError as e:
+        # e.g. missing OPENAI_API_KEY
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        # TEMP: show full LLM error so we can debug
+        raise HTTPException(status_code=500, detail=f"LLM error: {e}")
+
+    return LLMResponse(reply=reply)
+

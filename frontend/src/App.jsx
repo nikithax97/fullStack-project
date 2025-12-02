@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TaskForm from './TaskForm';
-import TaskList from './TaskList';
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
+import AiAssistant from './components/AiAssistant';
 import './index.css';
 
 const API_URL = 'http://localhost:8001/tasks';
@@ -36,6 +37,8 @@ function App() {
       <h2>Task Manager</h2>
       <TaskForm addTask={addTask} />
       <TaskList tasks={tasks} updateTask={updateTask} deleteTask={deleteTask} />
+      <hr />
+      <AiAssistant />
     </div>
   );
 }

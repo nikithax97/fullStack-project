@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class TaskCreate(BaseModel):
     title: str
@@ -13,5 +13,13 @@ class TaskOut(BaseModel):
     title: str
     completed: bool
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class LLMRequest(BaseModel):
+    message: str
+    user_id: str | None = None   # optional, for multi-user later
+
+
+class LLMResponse(BaseModel):
+    reply: str
