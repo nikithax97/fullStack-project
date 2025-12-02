@@ -1,3 +1,26 @@
+# ========================
+# ENVIRONMENT SECRETS
+# ========================
+.env
+backend/.env
+
+# ========================
+# PYTHON
+# ========================
+__pycache__/
+*.pyc
+*.pyo
+backend/venv/
+
+# ========================
+# NODE / REACT
+# ========================
+node_modules/
+frontend/node_modules/
+dist
+dist-ssr
+*.local
+
 # Logs
 logs
 *.log
@@ -7,12 +30,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# ========================
+# EDITORS / OS
+# ========================
 .vscode/*
 !.vscode/extensions.json
 .idea
