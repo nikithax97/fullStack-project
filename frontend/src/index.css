@@ -1,83 +1,174 @@
-/* Base styles */
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f2f5;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at top, #e0ebff 0, #f5f7fb 40%, #eef2f7 100%);
+  color: #111827;
 }
 
-/* App container */
+/* ---------- App container ---------- */
 .container {
-  max-width: 600px;
-  margin: 40px auto;
+  max-width: 780px;
+  margin: 48px auto;
   background-color: #ffffff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 32px 40px 36px;
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
 }
 
-/* Heading */
+/* Headings */
 h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333333;
+  margin: 0 0 20px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #111827;
 }
 
-/* Form styles */
+hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 32px 0 24px;
+}
+
+/* ---------- Forms & Inputs ---------- */
 form {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-input[type="text"] {
+input[type="text"],
+textarea {
   flex: 1;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #cccccc;
-  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+  background-color: #ffffff;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+/* ---------- Primary buttons (Add / Ask AI) ---------- */
 button {
-  padding: 10px 16px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease,
+    background 0.15s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.45);
+  filter: brightness(1.05);
 }
 
-/* Task list styles */
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+/* ---------- Task list ---------- */
 .task {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
+}
+
+.task:hover {
+  background-color: #f3f4ff;
+  box-shadow: 0 8px 16px rgba(148, 163, 184, 0.25);
+  transform: translateY(-1px);
 }
 
 .task input[type="checkbox"] {
-  transform: scale(1.2);
+  transform: scale(1.1);
   cursor: pointer;
+  accent-color: #2563eb;
 }
 
-.task input[type="text"] {
+.task span {
   flex: 1;
-  padding: 8px;
+  text-align: left;
   font-size: 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
 }
 
+/* completed task text */
+.task .completed {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+/* ---------- Task action buttons (Edit / Delete / Save / Cancel) ---------- */
+/* Removed the red style – now they are soft neutral pills */
 .task button {
-  background-color: #dc3545;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #374151;
+  box-shadow: none;
 }
 
 .task button:hover {
-  background-color: #a71d2a;
+  background: #d1d5db;
+  box-shadow: none;
+}
+
+/* ---------- Small tweaks for status messages (AI) ---------- */
+p {
+  font-size: 14px;
+  color: #4b5563;
 }
