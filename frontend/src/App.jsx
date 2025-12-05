@@ -5,7 +5,7 @@ import TaskList from './components/TaskList';
 import AiAssistant from './components/AiAssistant';
 import './index.css';
 
-const API_URL = 'http://localhost:8001/tasks';
+const API_URL = 'https://fullstack-project-1-koxs.onrender.com/tasks';
 
 function App() {
   const [tasks, setTasks] = useState([]);
