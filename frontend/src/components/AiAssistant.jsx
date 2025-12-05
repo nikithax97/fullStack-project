@@ -13,7 +13,7 @@ const AiAssistant = () => {
     setReply("");
 
     try {
-      const res = await fetch("http://localhost:8001/llm/chat", {
+      const res = await fetch("https://fullstack-project-1-koxs.onrender.com/llm/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
